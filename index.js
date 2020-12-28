@@ -1,7 +1,18 @@
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
 
 app.use(express.json());
+
+morgan.token("body", function stringifyBodyData(req) {
+  return JSON.stringify(req.body);
+});
+
+app.use(morgan("tiny"));
+
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+);
 
 let persons = [
   {
@@ -58,7 +69,6 @@ const generateId = () => {
   let id = -1;
   while (id === -1) {
     const randomNumber = Math.round(Math.random() * 10000);
-    console.log(randomNumber);
     const idCheck = persons.findIndex((item) => item.id === randomNumber);
     if (idCheck === -1) {
       id = randomNumber;
@@ -89,6 +99,12 @@ app.post("/api/persons", (request, response) => {
   persons = persons.concat(personAdded);
   response.json(persons);
 });
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
 
 const PORT = 3001;
 app.listen(PORT);
