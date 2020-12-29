@@ -4,6 +4,10 @@ const app = express();
 
 app.use(express.json());
 
+const cors = require("cors");
+
+app.use(cors());
+
 morgan.token("body", function stringifyBodyData(req) {
   return JSON.stringify(req.body);
 });
@@ -51,12 +55,27 @@ app.get("/info", (request, response) => {
 
 app.get("/api/persons/:id", (request, response) => {
   const id = Number(request.params.id);
-  const person = persons.find((note) => note.id === id);
+  const person = persons.find((person) => person.id === id);
   if (person) {
     response.json(person);
   } else {
     response.status(404).end();
   }
+});
+
+app.put("/api/persons/:id", (request, response) => {
+  const id = Number(request.params.id);
+  let personIndex = persons.findIndex((person) => person.id === id);
+  if (personIndex === -1) {
+    return response.status(404).json({
+      error: "Cannot find the name",
+    });
+  }
+  persons[personIndex] = {
+    ...persons[personIndex],
+    number: request.body.number,
+  };
+  response.json(persons[personIndex]);
 });
 
 app.delete("/api/persons/:id", (request, response) => {
@@ -106,6 +125,6 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint);
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT);
 console.log(`Server running on port ${PORT}`);
