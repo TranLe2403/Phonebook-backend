@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+var uniqueValidator = require("mongoose-unique-validator");
 
 if (process.argv.length < 3) {
   console.log(
@@ -19,8 +20,17 @@ mongoose.connect(url, {
 });
 
 const phonebookSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: {
+    type: String,
+    minlength: 3,
+    required: true,
+    unique: true,
+  },
+  number: {
+    type: String,
+    minlength: 8,
+    required: true,
+  },
 });
 
 const Phonebook = mongoose.model("Phonebook", phonebookSchema);
