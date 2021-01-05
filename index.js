@@ -52,7 +52,7 @@ app.get("/api/persons/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-app.put("/api/persons/:id", (request, response) => {
+app.put("/api/persons/:id", (request, response, next) => {
   const body = request.body;
 
   const person = {
@@ -66,8 +66,9 @@ app.put("/api/persons/:id", (request, response) => {
     .catch((error) => next(error));
 });
 
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/api/persons/:id", (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
+    // eslint-disable-next-line no-unused-vars
     .then((result) => {
       response.status(204).end();
     })

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-var uniqueValidator = require('mongoose-unique-validator');
+var uniqueValidator = require("mongoose-unique-validator");
 
 const url = process.env.MONGODB_URI;
 
@@ -7,6 +7,7 @@ console.log("connecting to", url);
 
 mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+  // eslint-disable-next-line no-unused-vars
   .then((result) => {
     console.log("connected to MongoDB");
   })
@@ -28,7 +29,7 @@ const personSchema = new mongoose.Schema({
   },
 });
 
-personSchema.plugin(uniqueValidator)
+personSchema.plugin(uniqueValidator);
 
 personSchema.set("toJSON", {
   transform: (document, returnedObject) => {

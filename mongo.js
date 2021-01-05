@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-var uniqueValidator = require("mongoose-unique-validator");
 
 if (process.argv.length < 3) {
   console.log(
@@ -20,17 +19,8 @@ mongoose.connect(url, {
 });
 
 const phonebookSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    minlength: 3,
-    required: true,
-    unique: true,
-  },
-  number: {
-    type: String,
-    minlength: 8,
-    required: true,
-  },
+  name: String,
+  number: String,
 });
 
 const Phonebook = mongoose.model("Phonebook", phonebookSchema);
@@ -42,16 +32,16 @@ const phonebook = new Phonebook({
 
 process.argv[3]
   ? phonebook.save().then((result) => {
-      console.log(`added ${result.name} number ${result.number} to phonebook`);
-      mongoose.connection.close();
-    })
+    console.log(`added ${result.name} number ${result.number} to phonebook`);
+    mongoose.connection.close();
+  })
   : Phonebook.find({}).then((result) => {
-      console.log("phonebook: ");
-      result.forEach((info) => {
-        console.log(`${info.name}: ${info.number}`);
-      });
-      mongoose.connection.close();
+    console.log("phonebook: ");
+    result.forEach((info) => {
+      console.log(`${info.name}: ${info.number}`);
     });
+    mongoose.connection.close();
+  });
 
 // phonebook.find({}).then(result => {
 //     console.log(result);
